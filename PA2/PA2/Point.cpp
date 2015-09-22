@@ -113,23 +113,75 @@ namespace Clustering
 	   return pointA;
     }
 
-    const Point operator+(const Point &, const Point &)
+    const Point operator+(const Point & pointA, const Point & pointB)
     {
-
+	   return Point(pointA.dim, pointA.values) += pointB;
     }
 
-    const Point operator-(const Point &, const Point &)
+    const Point operator-(const Point & pointA, const Point & pointB)
     {
-
+	   return Point(pointA.dim, pointA.values) -= pointB;
     }
         
-    bool operator==(const Point &, const Point &);
-    bool operator!=(const Point &, const Point &);
+    bool operator==(const Point & pointA, const Point & pointB)
+    {
+	   for(int i = 0; i < pointA.dim; i++)
+	   {
+		  if(pointA.values[i] != pointB.values[i])
+			 return false;
+	   }
+	   return true;
+    }
+
+    bool operator!=(const Point & pointA, const Point & pointB)
+    {
+	   for(int i = 0; i < pointA.dim; i++)
+	   {
+		  if(pointA.values[i] != pointB.values[i])
+			 return true;
+	   }
+	   return false;
+    }
         
-    bool operator<(const Point &, const Point &);
-    bool operator>(const Point &, const Point &);
-    bool operator<=(const Point &, const Point &);
-    bool operator>=(const Point &, const Point &);
+    bool operator<(const Point & pointA, const Point & pointB)
+    {
+	   for(int i = 0; i < pointA.dim; i++)
+	   {
+		  if(pointA.values[i] >= pointB.values[i])
+			 return false;
+	   }
+	   return true;
+    }
+
+    bool operator>(const Point & pointA, const Point & pointB)
+    {
+	   for(int i = 0; i < pointA.dim; i++)
+	   {
+		  if(pointA.values[i] <= pointB.values[i])
+			 return false;
+	   }
+	   return true;
+    }
+
+    bool operator<=(const Point & pointA, const Point & pointB)
+    {
+	   for(int i = 0; i < pointA.dim; i++)
+	   {
+		  if(pointA.values[i] > pointB.values[i])
+			 return false;
+	   }
+	   return true;
+    }
+
+    bool operator>=(const Point & pointA, const Point & pointB)
+    {
+	   for(int i = 0; i < pointA.dim; i++)
+	   {
+		  if(pointA.values[i] < pointB.values[i])
+			 return false;
+	   }
+	   return true;
+    }
 
     std::ostream &operator<<(std::ostream &, const Point &);
     std::istream &operator>>(std::istream &, Point &);
