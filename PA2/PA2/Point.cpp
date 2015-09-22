@@ -4,6 +4,7 @@ namespace Clustering
 {
     Point::Point(int dimensions)
     {
+	   dim = dimensions;
 	   values = new double[dimensions];
 	   for(int i = 0; i < dimensions; i++)
 	   {
@@ -13,6 +14,7 @@ namespace Clustering
 
     Point::Point(int dimensions, double * dimensionsArray)
     {
+    	   dim = dimensions;
 	   values = new double[dimensions];
 	   for(int i = 0; i < dimensions; i++)
 	   {
