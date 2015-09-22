@@ -2,8 +2,6 @@
 //
 
 #include "stdafx.h"
-#include "Point.cpp"
-#include "Cluster.cpp"
 
 
 int main()

@@ -2,8 +2,6 @@
 
 namespace Clustering 
 {
-    Cluster::Cluster() : size(0), points(nullptr) {};
-
     // The big three: cpy ctor, overloaded operator=, dtor
     Cluster::Cluster(const Cluster & copy)
     {

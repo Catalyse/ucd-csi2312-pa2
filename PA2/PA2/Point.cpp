@@ -33,8 +33,9 @@ namespace Clustering
 
     Point& Point::operator=(const Point & copy)
     {
-	   Point newPoint = Point(copy.dim, copy.values);
-	   return newPoint;
+	   dim = copy.dim;
+	   values = copy.values;
+	   return *this;
     }
 
     Point::~Point()

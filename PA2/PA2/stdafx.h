@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include "Point.cpp"
+#include "Cluster.cpp"
 
 
 
