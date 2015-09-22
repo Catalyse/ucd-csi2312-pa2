@@ -8,9 +8,6 @@ namespace Clustering {
     typedef Point *PointPtr;
     typedef struct LNode *LNodePtr;
 
-//    struct LNode;
-//    typedef LNode *LNodePtr;
-
     struct LNode {
         PointPtr p;
         LNodePtr next;
