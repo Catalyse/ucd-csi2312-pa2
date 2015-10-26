@@ -11,6 +11,7 @@ namespace Clustering {
         double *values; // values of the point's dimensions
 
     public:
+        Point();
         Point(int);
         Point(int, double *);
 
