@@ -36,7 +36,7 @@ namespace Clustering
 	   values = new double[dim];
 	   for(int i = 0; i < dim; i++)
 	   {
-		  values[i] = pointToCopy.values[i];
+		  values[i] = pointToCopy.getValue(i);
 	   }
     }
 
@@ -52,7 +52,7 @@ namespace Clustering
             double* newArray = new double[dim];
             for (int i = 0; i < dim; i++)
             {
-                newArray[i] = point.values[i];
+                newArray[i] = point.getValue(i);
             }
             delete [] values;
             values = newArray;
@@ -162,22 +162,24 @@ namespace Clustering
         }
         return sum;
     }
-        
+
+    //Roll through vals till I find one thats not equal then return
     bool operator==(const Point & pointA, const Point & pointB)
     {
 	   for(int i = 0; i < pointA.getDims(); i++)
 	   {
-		  if(pointA.values[i] != pointB.values[i])
+		  if(pointA.getValue(i) != pointB.getValue(i))
 			 return false;
 	   }
 	   return true;
     }
 
+    //Roll through vals till I find one thats not equal then return
     bool operator!=(const Point & pointA, const Point & pointB)
     {
 	   for(int i = 0; i < pointA.getDims(); i++)
 	   {
-		  if(pointA.values[i] != pointB.values[i])
+		  if(pointA.getValue(i) != pointB.getValue(i))
 			 return true;
 	   }
 	   return false;
@@ -187,7 +189,7 @@ namespace Clustering
     {
 	   for(int i = 0; i < pointA.getDims(); i++)
 	   {
-		  if(pointA.values[i] >= pointB.values[i])
+		  if(pointA.getValue(i) >= pointB.getValue(i))
 			 return false;
 	   }
 	   return true;
@@ -197,7 +199,7 @@ namespace Clustering
     {
 	   for(int i = 0; i < pointA.getDims(); i++)
 	   {
-		  if(pointA.values[i] <= pointB.values[i])
+		  if(pointA.getValue(i) <= pointB.getValue(i))
 			 return false;
 	   }
 	   return true;
@@ -207,7 +209,7 @@ namespace Clustering
     {
 	   for(int i = 0; i < pointA.getDims(); i++)
 	   {
-		  if(pointA.values[i] > pointB.values[i])
+		  if(pointA.getValue(i) > pointB.getValue(i))
 			 return false;
 	   }
 	   return true;
@@ -217,7 +219,7 @@ namespace Clustering
     {
 	   for(int i = 0; i < pointA.getDims(); i++)
 	   {
-		  if(pointA.values[i] < pointB.values[i])
+		  if(pointA.getValue(i) < pointB.getValue(i))
 			 return false;
 	   }
 	   return true;
