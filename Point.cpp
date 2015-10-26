@@ -225,6 +225,14 @@ namespace Clustering
 	   return true;
     }
 
-    std::ostream &operator<<(std::ostream &, const Point &);
-    std::istream &operator>>(std::istream &, Point &);
+    std::ostream &operator<<(std::ostream &stream, const Point &point)
+    {
+        for(int i = 0; i < point.dim; i++)
+        {
+            std::cout << point.getValue(i) << " ";
+        }
+        std::cout << std::endl;
+
+        return stream;
+    }
 }
