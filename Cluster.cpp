@@ -5,12 +5,18 @@ namespace Clustering
     // The big three: cpy ctor, overloaded operator=, dtor
     Cluster::Cluster(const Cluster & copy)
     {
-
+        size = copy.size;
+        points = copy.points;
     }
-    
-    Cluster& Cluster::operator=(const Cluster & copy)
-    {
 
+    Cluster &Cluster::operator=(const Cluster & copy)
+    {
+        if (this != &copy)
+        {
+            size = copy.size;
+            points = copy.points;
+        }
+        return *this;
     }
 
     Cluster::~Cluster()
@@ -21,7 +27,7 @@ namespace Clustering
     // Set functions: They allow calling c1.add(c2.remove(p));
     void add(const PointPtr & newPoint)
     {
-
+    
     }
 
     const PointPtr &remove(const PointPtr & removePoint)
