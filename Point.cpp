@@ -22,11 +22,11 @@ namespace Clustering
     Point::Point(int dimensions, double * dimensionsArray)
     {
         dim = dimensions;
-	    values = new double[dimensions];
-	    for(int i = 0; i < dimensions; i++)
-	    {
+        values = new double[dimensions];
+        for(int i = 0; i < dimensions; i++)
+        {
             values[i] = dimensionsArray[i];
-	    }
+        }
     }
 
     //Copy Ctor
@@ -187,42 +187,50 @@ namespace Clustering
         
     bool operator<(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)
+	   for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
 	   {
-		  if(pointA.getValue(i) >= pointB.getValue(i))
-			 return false;
+		    if(pointA.getValue(i) < pointB.getValue(i))
+			    return true;
+            if(pointA.getValue(i) > pointB.getValue(i))
+                return false;
 	   }
-	   return true;
+	   return false;//If it makes it to this return then they are equal and left !< right
     }
 
     bool operator>(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)
-	   {
-		  if(pointA.getValue(i) <= pointB.getValue(i))
-			 return false;
-	   }
-	   return true;
+        for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+        {
+            if(pointA.getValue(i) > pointB.getValue(i))
+                return true;
+            if(pointA.getValue(i) < pointB.getValue(i))
+                return false;
+        }
+        return false;//If it makes it to this return then they are equal and left !> right
     }
 
     bool operator<=(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)
-	   {
-		  if(pointA.getValue(i) > pointB.getValue(i))
-			 return false;
-	   }
-	   return true;
+        for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+        {
+            if(pointA.getValue(i) < pointB.getValue(i))
+                return true;
+            if(pointA.getValue(i) > pointB.getValue(i))
+                return false;
+        }
+        return true;//If it finished they are equal
     }
 
     bool operator>=(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)
-	   {
-		  if(pointA.getValue(i) < pointB.getValue(i))
-			 return false;
-	   }
-	   return true;
+        for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+        {
+            if(pointA.getValue(i) > pointB.getValue(i))
+                return true;
+            if(pointA.getValue(i) < pointB.getValue(i))
+                return false;
+        }
+        return true;//If it finished they are equal.
     }
 
     std::ostream &operator<<(std::ostream &stream, const Point &point)
