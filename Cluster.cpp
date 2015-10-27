@@ -1,4 +1,5 @@
 #include "Cluster.h"
+#include "Point.h"
 
 namespace Clustering 
 {
@@ -35,32 +36,45 @@ namespace Clustering
             points->p = newPoint;
             node->next = nullptr;
         }
-        else
-        {
+        else {
             LNodePtr current = points;
             PointPtr currentPoint = points->p;
 
-            for(int i = 0; i < size; i ++)
+            if (*newPoint > *current->p || *newPoint == *current->p)
             {
-                if(newPoint > currentPoint || newPoint == currentPoint)//We found where to put it
-                {
-                    LNodePtr temp = current; //Save point to move.
+                points = node;
+                node->p = newPoint;
+                node->next = current;
+            }
+            else
+            {
+                while(current != nullptr) {
+                    LNodePtr nextNode = current->next;
+                    if (nextNode != nullptr)
+                    {
+                        PointPtr nextPoint = nextNode->p;
 
-                    current = node; //Assign blank node, add point, set next.
-                    current->p = newPoint;
-                    current->next = temp;
-                    break;
-                }
-                else if(current->next != nullptr) //move to the next val
-                {
-                    current = current->next;
-                    currentPoint = current->p;
-                }
-                else //List ended, add it to the end.
-                {
-                    current->next = node;
-                    current->next->p = newPoint;
-                    current->next->next = nullptr;
+                        if (*newPoint > *nextPoint || *newPoint == *nextPoint)//We found where to put it
+                        {
+                            current = node;
+                            current->p = newPoint;
+                            node->next = nextNode;
+                            if (nextNode != nullptr)
+                                node->next->p = nextPoint;
+                            break;
+                        }
+                        else if (current->next != nullptr) //move to the next val
+                        {
+                            current = nextNode;
+                            currentPoint = nextPoint;
+                        }
+                    }
+                    else
+                    {
+                        current->next = node;
+                        current->next->p = newPoint;
+                        break;
+                    }
                 }
             }
         }
