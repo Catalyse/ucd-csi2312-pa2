@@ -40,7 +40,7 @@ namespace Clustering
             LNodePtr current = points;
             PointPtr currentPoint = points->p;
 
-            if (*newPoint > *current->p || *newPoint == *current->p)
+            if (*newPoint > *currentPoint || *newPoint == *currentPoint)
             {
                 points = node;
                 node->p = newPoint;
@@ -54,13 +54,11 @@ namespace Clustering
                     {
                         PointPtr nextPoint = nextNode->p;
 
-                        if (*newPoint > *nextPoint || *newPoint == *nextPoint)//We found where to put it
+                        if (*newPoint >= *nextPoint)//We found where to put it
                         {
-                            current = node;
-                            current->p = newPoint;
+                            current->next = node;
+                            node->p = newPoint;
                             node->next = nextNode;
-                            if (nextNode != nullptr)
-                                node->next->p = nextPoint;
                             break;
                         }
                         else if (current->next != nullptr) //move to the next val

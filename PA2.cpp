@@ -41,6 +41,11 @@ void Test()
     p5->setValue(1, 2);
     p5->setValue(2, 2);
 
+    PointPtr p6 = new Point(3);
+    p6->setValue(0, 3);
+    p6->setValue(1, 3);
+    p6->setValue(2, 3);
+
     PointPtr p3 = new Point(3);
 
     std::cout << "P1 has " << p1->getDims() << " Dimensions " << std::endl;
@@ -62,6 +67,7 @@ void Test()
     c1.add(p3);
     c1.add(p4);
     c1.add(p5);
+    c1.add(p6);
     //c1.remove(p1);
 
     std::cout << "Cluster output: " << std::endl;
