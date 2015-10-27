@@ -151,24 +151,37 @@ namespace Clustering
             LNodePtr current = rhs.points;
             for(int i = 0; i < rhs.size; i++)
             {
-                add()
+                add(current->p);//Just let add figure out where to put it, including duplicates since it was not specified if they needed to be deleted.
+                current = current->next;
             }
         }
+        return *this;
     }
 
     Cluster &Cluster::operator-=(const Cluster &rhs) // (asymmetric) difference
     {
-
+        if(rhs.size > 0)
+        {
+            LNodePtr current = rhs.points;
+            for(int i = 0; i < rhs.size; i++)
+            {
+                remove(current->p);//Just let add figure out where to put it, including duplicates since it was not specified if they needed to be deleted.
+                current = current->next;
+            }
+        }
+        return *this;
     }
 
-    Cluster &Cluster::operator+=(const Point &rhs) // add point
+    Cluster &Cluster::operator+=(const Point &point) // add point
     {
-
+        PointPtr pointer =  new Point(point);
+        this->add(pointer);
     }
 
-    Cluster &Cluster::operator-=(const Point &rhs) // remove point
+    Cluster &Cluster::operator-=(const Point &point) // remove point
     {
-
+        PointPtr pointer = new Point(point);
+        this->remove(pointer);
     }
 
 
@@ -176,23 +189,31 @@ namespace Clustering
     // - Friends
     const Cluster operator+(const Cluster &lhs, const Cluster &rhs)
     {
-
+        Cluster result = lhs;
+        result += rhs;
+        return result;
     }
 
     const Cluster operator-(const Cluster &lhs, const Cluster &rhs)
     {
-
+        Cluster result = lhs;
+        result -= rhs;
+        return result;
     }
 
 
     const Cluster operator+(const Cluster &lhs, const PointPtr &rhs)
     {
-
+        Cluster result = lhs;
+        result.add(rhs);
+        return result;
     }
 
     const Cluster operator-(const Cluster &lhs, const PointPtr &rhs)
     {
-
+        Cluster result = lhs;
+        result.remove(rhs);
+        return result;
     }
 }
 
