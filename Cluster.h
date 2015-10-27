@@ -17,6 +17,7 @@ namespace Clustering {
         int size;
         int pointDims;
         LNodePtr points;
+        PointPtr centroid;
 
     public:
         Cluster() : size(0), points(nullptr) {};
@@ -28,6 +29,9 @@ namespace Clustering {
 
         // Set functions: They allow calling c1.add(c2.remove(p));
         void add(const PointPtr &);
+        void setCentroid(const Point &);
+        const Point getCentroid();
+        void computeCentroid();
         const PointPtr &remove(const PointPtr &);
 
         // Overloaded operators

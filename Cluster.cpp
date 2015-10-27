@@ -28,6 +28,47 @@ namespace Clustering
 
     }
 
+    void Cluster::setCentroid(const Point &setPoint)
+    {
+        if(setPoint.getDims() == pointDims)
+        {
+            PointPtr newCenter = &setPoint;
+            centroid = newCenter;
+        }
+        else
+            std::cout << "Invalid Set Point!  Point to set centroid MUST have the same dimensions as the cluster." << std::endl << "Current Cluster Point Dims(Cluster type) is: " << pointDims << std::endl;
+    }
+
+    const Point Cluster::getCentroid()
+    {
+        Point returnPoint = *centroid;
+        return returnPoint;
+    }
+
+    void Cluster::computeCentroid()
+    {
+        centroid = new Point(pointDims);//Reset the centroid
+
+        LNodePtr current = points;
+
+        for (int i = 0; i < pointDims; i++)
+        {
+            int j = 0;
+            double dimAverage = 0.0;//Make a var to store average
+            while(current != nullptr)
+            {
+                dimAverage += current->p->getValue(j);
+                current = current->next;
+                j++;
+            }
+            dimAverage = dimAverage / j;
+
+            centroid->setValue(i, dimAverage);
+
+            current = points;
+        }
+    }
+
     // Set functions: They allow calling c1.add(c2.remove(p));
     void Cluster::add(const PointPtr &newPoint)
     {
