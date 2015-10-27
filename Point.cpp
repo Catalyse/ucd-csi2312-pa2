@@ -1,4 +1,5 @@
 #include "Point.h"
+#include <sstream>
 
 namespace Clustering
 {
@@ -241,6 +242,22 @@ namespace Clustering
         }
         std::cout << std::endl;
 
+        return stream;
+    }
+
+    std::istream &operator>>(std::istream &stream, Point &point)
+    {
+        std::string value;
+        int i = 0;
+        double val;
+
+        while (getline(stream, value, ','))
+        {
+            std::stringstream ss(value);
+            ss >> val;
+            point.setValue(i, val);
+            i++;
+        }
         return stream;
     }
 }

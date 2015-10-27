@@ -1,5 +1,6 @@
 #include "Cluster.h"
-#include "Point.h"
+#include <sstream>
+#include <algorithm> //For counting
 
 namespace Clustering 
 {
@@ -8,6 +9,7 @@ namespace Clustering
     {
         size = copy.size;
         points = copy.points;
+        pointDims = copy.pointDims;
     }
 
     Cluster &Cluster::operator=(const Cluster & copy)
@@ -16,6 +18,7 @@ namespace Clustering
         {
             size = copy.size;
             points = copy.points;
+            pointDims = copy.pointDims;
         }
         return *this;
     }
@@ -28,55 +31,57 @@ namespace Clustering
     // Set functions: They allow calling c1.add(c2.remove(p));
     void Cluster::add(const PointPtr &newPoint)
     {
-        LNodePtr node = new LNode();
-
-        if(points == nullptr)
+        if(pointDims != 0 && newPoint->getDims() != pointDims)
         {
-            points = node;
-            points->p = newPoint;
-            node->next = nullptr;
+            std::cout << "Invalid Point: Cannot add different sized points to a cluster!" << std::endl;
         }
         else {
-            LNodePtr current = points;
-            PointPtr currentPoint = points->p;
+            LNodePtr node = new LNode();
 
-            if (*newPoint > *currentPoint || *newPoint == *currentPoint)
-            {
+            if (points == nullptr) {
                 points = node;
-                node->p = newPoint;
-                node->next = current;
+                points->p = newPoint;
+                node->next = nullptr;
+                pointDims = newPoint->getDims();//Set our Clusters point size type when the first element is added.
             }
-            else
-            {
-                while(current != nullptr) {
-                    LNodePtr nextNode = current->next;
-                    if (nextNode != nullptr)
-                    {
-                        PointPtr nextPoint = nextNode->p;
+            else {
+                LNodePtr current = points;
+                PointPtr currentPoint = points->p;
 
-                        if (*newPoint >= *nextPoint)//We found where to put it
-                        {
+                if (*newPoint > *currentPoint || *newPoint == *currentPoint) {
+                    points = node;
+                    node->p = newPoint;
+                    node->next = current;
+                }
+                else {
+                    while (current != nullptr) {
+                        LNodePtr nextNode = current->next;
+                        if (nextNode != nullptr) {
+                            PointPtr nextPoint = nextNode->p;
+
+                            if (*newPoint >= *nextPoint)//We found where to put it
+                            {
+                                current->next = node;
+                                node->p = newPoint;
+                                node->next = nextNode;
+                                break;
+                            }
+                            else if (current->next != nullptr) //move to the next val
+                            {
+                                current = nextNode;
+                                currentPoint = nextPoint;
+                            }
+                        }
+                        else {
                             current->next = node;
-                            node->p = newPoint;
-                            node->next = nextNode;
+                            current->next->p = newPoint;
                             break;
                         }
-                        else if (current->next != nullptr) //move to the next val
-                        {
-                            current = nextNode;
-                            currentPoint = nextPoint;
-                        }
-                    }
-                    else
-                    {
-                        current->next = node;
-                        current->next->p = newPoint;
-                        break;
                     }
                 }
             }
+            size++;
         }
-        size++;
     }
 
     const PointPtr &Cluster::remove(const PointPtr & removePoint)
@@ -96,7 +101,10 @@ namespace Clustering
                 }
             }
             if(current == nullptr)//If end of list is reached
+            {
                 std::cout << "Node Not Found in List!" << std::endl;//Alert user node is not in list.
+                return removePoint;
+            }
             else if(points == current)//remove head
                 points = points->next;
             else
@@ -133,7 +141,30 @@ namespace Clustering
         }
 
         return stream;
-    }//nope
+    }
+
+    std::istream &operator>>(std::istream &stream, Cluster &cluster)
+    {
+        std::string line;
+        getline(stream,line);
+        int pSize = std::count(line.begin(),line.end(),',') + 1;
+        std::stringstream ss(line);
+        PointPtr newPoint = new Clustering::Point(pSize);
+        ss >> *newPoint;
+        cluster.add(newPoint);
+
+        while (getline(stream, line))
+        {
+            std::stringstream lineStream(line);
+            PointPtr newPoint = new Clustering::Point(pSize);
+
+            lineStream >> *newPoint;
+
+            cluster.add(newPoint);
+
+        }
+        return stream;
+    }
     // Set-preserving operators (do not duplicate points in the space)
     // - Friends
     bool operator==(const Cluster &lhs, const Cluster &rhs)

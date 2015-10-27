@@ -15,6 +15,7 @@ namespace Clustering {
 
     class Cluster {
         int size;
+        int pointDims;
         LNodePtr points;
 
     public:
