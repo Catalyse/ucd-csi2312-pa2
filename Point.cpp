@@ -62,7 +62,7 @@ namespace Clustering
 
     Point::~Point()
     {//Dim deleted with point from stack
-	   delete [] values;
+	    delete [] values;
     }
 
     // Accessors & mutators

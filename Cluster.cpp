@@ -25,14 +25,35 @@ namespace Clustering
 
     Cluster::~Cluster()
     {
+        if (points != nullptr)
+        {
+            LNodePtr current = points;
+            LNodePtr next = current->next;
 
+            while (current != nullptr)
+            {
+                delete current->p;
+                delete current;
+                current = next;
+                next = next->next;
+                if (next == nullptr)
+                {
+                    delete current->p;
+                    delete current;
+                    break;
+                }
+            }
+            std::cout << "Cluster Deleted" << std::endl;
+        }
+        else
+            std::cout << "Empty Cluster Deleted" << std::endl;
     }
 
     void Cluster::setCentroid(const Point &setPoint)
     {
         if(setPoint.getDims() == pointDims)
         {
-            PointPtr newCenter = &setPoint;
+            PointPtr newCenter = new Point(setPoint);
             centroid = newCenter;
         }
         else
@@ -76,28 +97,35 @@ namespace Clustering
         {
             std::cout << "Invalid Point: Cannot add different sized points to a cluster!" << std::endl;
         }
-        else {
+        else
+        {
             LNodePtr node = new LNode();
 
-            if (points == nullptr) {
+            if (points == nullptr)
+            {
                 points = node;
                 points->p = newPoint;
                 node->next = nullptr;
                 pointDims = newPoint->getDims();//Set our Clusters point size type when the first element is added.
             }
-            else {
+            else
+            {
                 LNodePtr current = points;
                 PointPtr currentPoint = points->p;
 
-                if (*newPoint > *currentPoint || *newPoint == *currentPoint) {
+                if (*newPoint > *currentPoint || *newPoint == *currentPoint)
+                {
                     points = node;
                     node->p = newPoint;
                     node->next = current;
                 }
-                else {
-                    while (current != nullptr) {
+                else
+                {
+                    while (current != nullptr)
+                    {
                         LNodePtr nextNode = current->next;
-                        if (nextNode != nullptr) {
+                        if (nextNode != nullptr)
+                        {
                             PointPtr nextPoint = nextNode->p;
 
                             if (*newPoint >= *nextPoint)//We found where to put it
@@ -113,7 +141,8 @@ namespace Clustering
                                 currentPoint = nextPoint;
                             }
                         }
-                        else {
+                        else
+                        {
                             current->next = node;
                             current->next->p = newPoint;
                             break;
@@ -174,13 +203,11 @@ namespace Clustering
                 point = currentNode->p;
                 std::cout << *point;
             }
-
         }
         else
         {
             std::cout << "Cluster is empty" << std::endl;
         }
-
         return stream;
     }
 
@@ -202,7 +229,6 @@ namespace Clustering
             lineStream >> *newPoint;
 
             cluster.add(newPoint);
-
         }
         return stream;
     }

@@ -28,12 +28,6 @@ int main(void)
         c1.add(newPoint);
     }
 
-    PointPtr p1 = new Point(2);
-    p1->setValue(1, 1);
-    p1->setValue(0, 2);
-
-    c1.add(p1);
-
     std::cout << "Cluster output: " << std::endl;
     std::cout << c1;
     return 0;
