@@ -11,6 +11,8 @@ namespace Clustering {
         double *values; // values of the point's dimensions
 
     public:
+        static const char POINT_VALUE_DELIM;
+
         Point();
         Point(int);
         Point(int, double *);
@@ -36,7 +38,7 @@ namespace Clustering {
         const Point operator*(double) const; // prevent (p1*2) = p2;
         const Point operator/(double) const;
 
-        double &operator[](int index) { return values[index - 1]; } // TODO out-of-bds?
+        double &operator[](int index) { return values[index]; } // TODO out-of-bds?
 
         // Friends
         friend Point &operator+=(Point &, const Point &);

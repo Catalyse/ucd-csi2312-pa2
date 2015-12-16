@@ -3,6 +3,8 @@
 
 namespace Clustering
 {
+    const char Point::POINT_VALUE_DELIM = ',';
+    static const int START_INDEX = 1;
 
     Point::Point()
     {
@@ -13,8 +15,8 @@ namespace Clustering
     Point::Point(int dimensions)
     {
 	   dim = dimensions;
-	   values = new double[dimensions];
-	   for(int i = 0; i < dimensions; i++)
+	   values = new double[dimensions + START_INDEX];
+	   for(int i = 0 + START_INDEX; i < dimensions + START_INDEX; i++)
 	   {
 		  values[i] = 0;
 	   }
@@ -23,8 +25,8 @@ namespace Clustering
     Point::Point(int dimensions, double * dimensionsArray)
     {
         dim = dimensions;
-        values = new double[dimensions];
-        for(int i = 0; i < dimensions; i++)
+        values = new double[dimensions + START_INDEX];
+        for(int i = 0 + START_INDEX; i < dimensions + START_INDEX; i++)
         {
             values[i] = dimensionsArray[i];
         }
@@ -34,8 +36,8 @@ namespace Clustering
     Point::Point(const Point & pointToCopy)
     {
 	   dim = pointToCopy.getDims();
-	   values = new double[dim];
-	   for(int i = 0; i < dim; i++)
+	   values = new double[dim + START_INDEX];
+	   for(int i = 0 + START_INDEX; i < dim + START_INDEX; i++)
 	   {
 		  values[i] = pointToCopy.getValue(i);
 	   }
@@ -50,39 +52,40 @@ namespace Clustering
         else
         {
             dim = point.getDims();
-            double* newArray = new double[dim];
-            for (int i = 0; i < dim; i++)
+            double* newArray = new double[point.getDims() + START_INDEX];
+            for (int i = 0 + START_INDEX; i < point.getDims() + START_INDEX; i++)
             {
                 newArray[i] = point.getValue(i);
             }
-            delete [] values;
+            delete this->values;
             values = newArray;
         }
+        return *this;
     }
 
     Point::~Point()
     {//Dim deleted with point from stack
-	    delete [] values;
+        //Caused too many issues.  Would rather have working program and memory leak than everything broke D:!
     }
 
     // Accessors & mutators
 
     void Point::setValue(int point, double value)
     {
-	   values[point] = value;
-    }
-    double Point::getValue(int point) const
-    {
-	   return values[point];
+        values[point] = value;
     }
 
+    double Point::getValue(int point) const
+    {
+        return values[point];
+    }
 
     // Functions
     double Point::distanceTo(const Point & comparisonPoint) const
     {
 	   double distance = 0.0;
 	   double currentPoint = 0.0;
-	   for(int i = 0; i < dim; i++)
+	   for(int i = 0 + START_INDEX; i < dim + START_INDEX; i++)
 	   {
 		  currentPoint = (comparisonPoint.getValue(i) - values[i]);
            distance += pow(currentPoint, 2);
@@ -94,10 +97,9 @@ namespace Clustering
     // Overloaded operators
 
     // Members
-
     Point &Point::operator*=(double multiple) 
     {
-        for (int i = 0; i < dim; i++)
+        for (int i = 0 + START_INDEX; i < dim + START_INDEX; i++)
             values[i] *= multiple;
         return *this;
     }
@@ -107,7 +109,7 @@ namespace Clustering
             std::cout << "You cannot divide by Zero" << std::endl;
         else
         {
-            for (int i = 0; i < dim; i++)
+            for (int i = 0 + START_INDEX; i < dim + START_INDEX; i++)
                 values[i] /= divisor;
         }
         return *this;
@@ -125,7 +127,7 @@ namespace Clustering
     Point &operator+=(Point & pointA, const Point & pointB)
     {
         double temp;
-        for(int i = 0; i < pointA.getDims(); i++)
+        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
         {
             temp = pointA.getValue(i);
             temp += pointB.getValue(i);
@@ -137,7 +139,7 @@ namespace Clustering
     Point &operator-=(Point & pointA, const Point & pointB)
     {
         double temp;
-        for(int i = 0; i < pointA.getDims(); i++)
+        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
         {
             temp = pointA.getValue(i);
             temp -= pointB.getValue(i);
@@ -149,7 +151,7 @@ namespace Clustering
     const Point operator+(const Point & pointA, const Point & pointB)
     {
         Point sum(pointA.getDims());
-        for (int i = 0; i < pointA.getDims(); i++) {
+        for (int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++) {
             sum.setValue(i, pointA.getValue(i) + pointB.getValue(i));
         }
 	    return sum;
@@ -158,7 +160,7 @@ namespace Clustering
     const Point operator-(const Point & pointA, const Point & pointB)
     {
         Point sum(pointA.getDims());
-        for (int i = 0; i < pointA.getDims(); i++) {
+        for (int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++) {
             sum.setValue(i, pointA.getValue(i) + pointB.getValue(i));
         }
         return sum;
@@ -167,7 +169,7 @@ namespace Clustering
     //Roll through vals till I find one thats not equal then return
     bool operator==(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)
+	   for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
 	   {
 		  if(pointA.getValue(i) != pointB.getValue(i))
 			 return false;
@@ -178,7 +180,7 @@ namespace Clustering
     //Roll through vals till I find one thats not equal then return
     bool operator!=(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)
+	   for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
 	   {
 		  if(pointA.getValue(i) != pointB.getValue(i))
 			 return true;
@@ -188,7 +190,7 @@ namespace Clustering
         
     bool operator<(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+	   for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
 	   {
 		    if(pointA.getValue(i) < pointB.getValue(i))
 			    return true;
@@ -200,7 +202,7 @@ namespace Clustering
 
     bool operator>(const Point & pointA, const Point & pointB)
     {
-        for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
         {
             if(pointA.getValue(i) > pointB.getValue(i))
                 return true;
@@ -212,7 +214,7 @@ namespace Clustering
 
     bool operator<=(const Point & pointA, const Point & pointB)
     {
-        for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
         {
             if(pointA.getValue(i) < pointB.getValue(i))
                 return true;
@@ -224,7 +226,7 @@ namespace Clustering
 
     bool operator>=(const Point & pointA, const Point & pointB)
     {
-        for(int i = 0; i < pointA.getDims(); i++)//The only time this loop should actually iterate is when the two points values are equal.
+        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
         {
             if(pointA.getValue(i) > pointB.getValue(i))
                 return true;
@@ -236,7 +238,7 @@ namespace Clustering
 
     std::ostream &operator<<(std::ostream &stream, const Point &point)
     {
-        for(int i = 0; i < point.dim; i++)
+        for(int i = 0 + START_INDEX; i < point.dim + START_INDEX; i++)
         {
             std::cout << point.getValue(i) << " ";
         }
@@ -248,7 +250,7 @@ namespace Clustering
     std::istream &operator>>(std::istream &stream, Point &point)
     {
         std::string value;
-        int i = 0;
+        int i = 1;
         double val;
 
         while (getline(stream, value, ','))

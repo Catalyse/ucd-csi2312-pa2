@@ -24,7 +24,8 @@ namespace Clustering
     }
 
     Cluster::~Cluster()
-    {
+    {//Was causing too many issues, leaving blank for now
+        /*
         if (points != nullptr)
         {
             LNodePtr current = points;
@@ -43,10 +44,16 @@ namespace Clustering
                     break;
                 }
             }
-            std::cout << "Cluster Deleted" << std::endl;
+            //std::cout << "Cluster Deleted" << std::endl;
         }
-        else
-            std::cout << "Empty Cluster Deleted" << std::endl;
+        else{}
+            //std::cout << "Empty Cluster Deleted" << std::endl;
+            */
+    }
+
+    int Cluster::getSize()
+    {
+        return size;
     }
 
     void Cluster::setCentroid(const Point &setPoint)
@@ -95,7 +102,7 @@ namespace Clustering
     {
         if(pointDims != 0 && newPoint->getDims() != pointDims)
         {
-            std::cout << "Invalid Point: Cannot add different sized points to a cluster!" << std::endl;
+            //std::cout << "Invalid Point: Cannot add different sized points to a cluster!" << std::endl;
         }
         else
         {
@@ -160,6 +167,7 @@ namespace Clustering
         {
             LNodePtr current = points;
             LNodePtr last;
+            /*
             while(current != nullptr)
             {
                 if(current->p == removePoint)
@@ -172,7 +180,6 @@ namespace Clustering
             }
             if(current == nullptr)//If end of list is reached
             {
-                std::cout << "Node Not Found in List!" << std::endl;//Alert user node is not in list.
                 return removePoint;
             }
             else if(points == current)//remove head
@@ -181,6 +188,24 @@ namespace Clustering
                 last->next = current->next;
             delete current;
             size--;
+             */
+            for (current = this->points; current != nullptr; current = current->next) {
+                if (current->p == removePoint) {
+                    if (last == nullptr) {
+                        this->points = this->points->next;
+                        --(this->size);
+                        break;
+                    } else {
+                        last->next = current->next;
+                        --(this->size);
+                        break;
+                    }
+                } else {
+                    last = current;
+                }
+            }
+            //this->invalidateCentroid();
+            return removePoint;
         }
         return removePoint;
     }

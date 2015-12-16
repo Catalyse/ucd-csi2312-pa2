@@ -5,9 +5,13 @@
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Cluster.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Cluster.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/PA2.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ClusteringTests.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ClusteringTests.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Point.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Point.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ec/ErrorContext.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ec/ErrorContext.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

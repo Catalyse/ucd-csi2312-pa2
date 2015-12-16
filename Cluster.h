@@ -27,6 +27,7 @@ namespace Clustering {
         Cluster &operator=(const Cluster &);
         ~Cluster();
 
+        int getSize();
         // Set functions: They allow calling c1.add(c2.remove(p));
         void add(const PointPtr &);
         void setCentroid(const Point &);
