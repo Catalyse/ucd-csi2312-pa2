@@ -116,11 +116,22 @@ namespace Clustering
     }
     const Point Point::operator*(double multiple) const 
     {
-        return Point(dim, values) *= multiple;
+        Point temp(*this);
+        for (int i = 0 + START_INDEX; i < temp.getDims() + START_INDEX; i++)
+            temp.values[i] *= multiple;
+        return temp;
     }
     const Point Point::operator/(double divisor) const 
     {
-        return Point(dim, values) /= divisor;
+        Point temp(*this);
+        if(divisor == 0)
+            std::cout << "You cannot divide by Zero" << std::endl;
+        else
+        {
+            for (int i = 0 + START_INDEX; i < temp.getDims() + START_INDEX; i++)
+                temp.values[i] /= divisor;
+        }
+        return temp;
     }
 
     //Friends
@@ -161,7 +172,7 @@ namespace Clustering
     {
         Point sum(pointA.getDims());
         for (int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++) {
-            sum.setValue(i, pointA.getValue(i) + pointB.getValue(i));
+            sum.setValue(i, pointA.getValue(i) - pointB.getValue(i));
         }
         return sum;
     }
