@@ -10,7 +10,7 @@
 #include <cmath>
 #include <map>
 #include <regex>
-#include <string>
+#include <sstream>
 
 #include "ClusteringTests.h"
 #include "Point.h"
@@ -64,7 +64,8 @@ bool ClusterCounts::parse_and_analyze() {
             std::string s(m[0]);
             std::regex r("[[:d:]]{1,}");
             std::regex_search(s, m, r);
-            int id = stoi(m[0]);
+            int id = 0;
+            std::istringstream(m[0]) >> id;
             __counts[id] = __counts[id] + 1;
         }
 

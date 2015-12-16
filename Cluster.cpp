@@ -4,6 +4,9 @@
 
 namespace Clustering 
 {
+    const char Cluster::POINT_CLUSTER_ID_DELIM = ':';
+    unsigned int Cluster::__idGenerator = 0;
+
     // The big three: cpy ctor, overloaded operator=, dtor
     Cluster::Cluster(const Cluster & copy) : __centroid(copy.getDimensionality())
     {
@@ -58,8 +61,6 @@ namespace Clustering
     void Cluster::computeCentroid()
     {
         PointPtr centroid = new Point(this->__dimensionality);
-        int count = 0;
-        int tLoops = 0;
         for (LNodePtr current = this->__points; current != nullptr; current = current->next)
         {
             *centroid += *current->p;
@@ -68,23 +69,107 @@ namespace Clustering
         this->setCentroid(*centroid);
     }
 
+    void Cluster::pickPoints(unsigned int pick, PointPtr * pointArray)
+    {
+        LNodePtr current = this->__points;
+        for (int i = 0; i < pick; i++)
+        {
+            if (current != nullptr)
+            {
+                pointArray[i] = current->p;
+                current = current->next;
+            }
+            else
+            {
+                Point * point = new Point(this->__dimensionality);
+                for (int i = 1; i < this->__dimensionality + 1; i++)
+                {
+                    point->setValue(i, std::numeric_limits<double>::max());
+                }
+                pointArray[i] = point;
+            }
+        }
+    }
+
+    double Cluster::intraClusterDistance() const
+    {
+        double sum = 0;
+        LNodePtr current1 = this->__points;
+        for (current1; current1 != nullptr; current1 = current1->next)
+        {
+            LNodePtr current2 = this->__points;
+            for (current2; current2 != nullptr; current2 = current2->next)
+            {
+                sum += current1->p->distanceTo(*current2->p);
+            }
+        }
+        return (sum / 2.0);
+    }
+
+    int Cluster::getClusterEdges() const
+    {
+        return ((this->__size * (this->__size - 1)) / 2);
+    }
+
+
+    double interClusterDistance(const Cluster &clusterA, const Cluster &clusterB)
+    {
+        Cluster cluster1(clusterA);
+        Cluster cluster2(clusterB);
+        double sum = 0;
+        LNodePtr current1 = cluster1.__points;
+        for (current1; current1 != nullptr; current1 = current1->next)
+        {
+            LNodePtr current2 = cluster2.__points;
+            for (current2; current2 != nullptr; current2 = current2->next)
+            {
+                sum += current1->p->distanceTo(*current2->p);
+            }
+        }
+        if (cluster1.__size > 1){
+            sum /= 2;
+        }
+        return sum;
+    }
+    // Same thing as (getClusterEdges), but between two __clusters.
+    int interClusterEdges(const Cluster &c1, const Cluster &c2)
+    {
+        Cluster cluster1(c1);
+        Cluster cluster2(c2);
+        double edges = cluster1.getSize() * cluster2.getSize();
+        return edges;
+    }
+
+    bool Cluster::contains(const PointPtr &find) const
+    {
+        LNodePtr current;
+        for (current = this->__points; current != nullptr; current = current->next)
+        {
+            if (current->p == find)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Set functions: They allow calling c1.add(c2.remove(p));
     void Cluster::add(const PointPtr &newPoint)
     {
-        if(pointDims != 0 && newPoint->getDims() != pointDims)
+        if(__dimensionality != 0 && newPoint->getDims() != __dimensionality)
         {
             //std::cout << "Invalid Point: Cannot add different sized points to a cluster!" << std::endl;
         }
         else
         {
-            LNodePtr node = new LNode();
+            LNodePtr node = new LNode(nullptr, nullptr);
 
             if (__points == nullptr)
             {
                 __points = node;
                 __points->p = newPoint;
                 node->next = nullptr;
-                pointDims = newPoint->getDims();//Set our Clusters point size type when the first element is added.
+                __dimensionality = newPoint->getDims();//Set our Clusters point size type when the first element is added.
             }
             else
             {
@@ -136,8 +221,8 @@ namespace Clustering
     {
         if(__points != nullptr)
         {
-            LNodePtr current = __points;
-            LNodePtr last;
+            LNodePtr current;
+            LNodePtr last = nullptr;
             for (current = this->__points; current != nullptr; current = current->next)
             {
                 if (current->p == removePoint)
@@ -160,7 +245,7 @@ namespace Clustering
                     last = current;
                 }
             }
-            //this->invalidateCentroid();
+            this->invalidateCentroid();
             return removePoint;
         }
         return removePoint;
@@ -235,6 +320,16 @@ namespace Clustering
     }
 
     // - Members
+    const PointPtr & Cluster::operator[](unsigned int index) const
+    {
+        LNodePtr current = this->__points;
+        for (int i = 0; i < index; i++)
+        {
+            current = current->next;
+        }
+        return current->p;
+    }
+
     Cluster &Cluster::operator+=(const Cluster &rhs) // union
     {
         if(rhs.__size > 0)
