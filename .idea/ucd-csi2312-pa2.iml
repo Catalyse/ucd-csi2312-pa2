@@ -7,6 +7,8 @@
       <sourceFolder url="file://$MODULE_DIR$/Cluster.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ClusteringTests.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ClusteringTests.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/KMeans.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/KMeans.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Point.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Point.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ec/ErrorContext.cpp" isTestSource="false" />
