@@ -13,6 +13,8 @@ set(SOURCE_FILES
     ClusteringTests.h
     KMeans.h
     KMeans.cpp
+    Exceptions.cpp
+    Exceptions.h
     ec/ErrorContext.h
     ec/ErrorContext.cpp)
 
