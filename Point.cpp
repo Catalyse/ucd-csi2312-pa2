@@ -1,4 +1,5 @@
 #include "Point.h"
+#include "Exceptions.h"
 #include <sstream>
 
 namespace Clustering
@@ -49,16 +50,25 @@ namespace Clustering
         {
             return *this;
         }
-        else
-        {
-            dim = point.getDims();
-            double* newArray = new double[point.getDims() + START_INDEX];
-            for (int i = 0 + START_INDEX; i < point.getDims() + START_INDEX; i++)
-            {
-                newArray[i] = point.getValue(i);
+        else {
+            try {
+                if (this->dim != point.getDims())
+                {
+                    throw DimensionalityMismatchEx("These two points have different dimensions.");
+                }
+                dim = point.getDims();
+                double *newArray = new double[point.getDims() + START_INDEX];
+                for (int i = 0 + START_INDEX; i < point.getDims() + START_INDEX; i++)
+                {
+                    newArray[i] = point.getValue(i);
+                }
+                delete this->values;
+                values = newArray;
             }
-            delete this->values;
-            values = newArray;
+            catch (DimensionalityMismatchEx error)
+            {
+                cout << error;
+            }
         }
         return *this;
     }
@@ -127,24 +137,41 @@ namespace Clustering
     //Friends
     Point &operator+=(Point & pointA, const Point & pointB)
     {
-        double temp;
-        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
+        try {
+            if (pointA.getDims() != pointB.getDims())
+            {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            double temp;
+            for (int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++) {
+                temp = pointA.getValue(i);
+                temp += pointB.getValue(i);
+                pointA.setValue(i, temp);
+            }
+        }
+        catch (DimensionalityMismatchEx error)
         {
-            temp = pointA.getValue(i);
-            temp += pointB.getValue(i);
-            pointA.setValue(i, temp);
+            cout << error;
         }
 	   return pointA;
     }
 
     Point &operator-=(Point & pointA, const Point & pointB)
     {
-        double temp;
-        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
+        try {
+            if (pointA.getDims() != pointB.getDims()) {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            double temp;
+            for (int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++) {
+                temp = pointA.getValue(i);
+                temp -= pointB.getValue(i);
+                pointA.setValue(i, temp);
+            }
+        }
+        catch (DimensionalityMismatchEx error)
         {
-            temp = pointA.getValue(i);
-            temp -= pointB.getValue(i);
-            pointA.setValue(i, temp);
+            cout << error;
         }
 	   return pointA;
     }
@@ -181,58 +208,106 @@ namespace Clustering
     //Roll through vals till I find one thats not equal then return
     bool operator!=(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)
-	   {
-		  if(pointA.getValue(i) != pointB.getValue(i))
-			 return true;
-	   }
+        try {
+            if (pointA.getDims() != pointB.getDims()) {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            for (int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++) {
+                if (pointA.getValue(i) != pointB.getValue(i))
+                    return true;
+            }
+        }
+        catch (DimensionalityMismatchEx error)
+        {
+            cout << error;
+        }
 	   return false;
     }
         
     bool operator<(const Point & pointA, const Point & pointB)
     {
-	   for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
-	   {
-		    if(pointA.getValue(i) < pointB.getValue(i))
-			    return true;
-            if(pointA.getValue(i) > pointB.getValue(i))
-                return false;
-	   }
+        try {
+            if (pointA.getDims() != pointB.getDims()) {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            for (int i = 0 + START_INDEX; i < pointA.getDims() +
+                                              START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+            {
+                if (pointA.getValue(i) < pointB.getValue(i))
+                    return true;
+                if (pointA.getValue(i) > pointB.getValue(i))
+                    return false;
+            }
+        }
+        catch (DimensionalityMismatchEx error)
+        {
+            cout << error;
+        }
 	   return false;//If it makes it to this return then they are equal and left !< right
     }
 
     bool operator>(const Point & pointA, const Point & pointB)
     {
-        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+        try {
+            if (pointA.getDims() != pointB.getDims()) {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            for (int i = 0 + START_INDEX; i < pointA.getDims() +
+                                              START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+            {
+                if (pointA.getValue(i) > pointB.getValue(i))
+                    return true;
+                if (pointA.getValue(i) < pointB.getValue(i))
+                    return false;
+            }
+        }
+        catch (DimensionalityMismatchEx error)
         {
-            if(pointA.getValue(i) > pointB.getValue(i))
-                return true;
-            if(pointA.getValue(i) < pointB.getValue(i))
-                return false;
+            cout << error;
         }
         return false;//If it makes it to this return then they are equal and left !> right
     }
 
     bool operator<=(const Point & pointA, const Point & pointB)
     {
-        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+        try {
+            if (pointA.getDims() != pointB.getDims()) {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            for (int i = 0 + START_INDEX; i < pointA.getDims() +
+                                              START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+            {
+                if (pointA.getValue(i) < pointB.getValue(i))
+                    return true;
+                if (pointA.getValue(i) > pointB.getValue(i))
+                    return false;
+            }
+        }
+        catch (DimensionalityMismatchEx error)
         {
-            if(pointA.getValue(i) < pointB.getValue(i))
-                return true;
-            if(pointA.getValue(i) > pointB.getValue(i))
-                return false;
+            cout << error;
         }
         return true;//If it finished they are equal
     }
 
     bool operator>=(const Point & pointA, const Point & pointB)
     {
-        for(int i = 0 + START_INDEX; i < pointA.getDims() + START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+        try {
+            if (pointA.getDims() != pointB.getDims()) {
+                throw DimensionalityMismatchEx("These two points have different dimensions.");
+            }
+            for (int i = 0 + START_INDEX; i < pointA.getDims() +
+                                              START_INDEX; i++)//The only time this loop should actually iterate is when the two points values are equal.
+            {
+                if (pointA.getValue(i) > pointB.getValue(i))
+                    return true;
+                if (pointA.getValue(i) < pointB.getValue(i))
+                    return false;
+            }
+        }
+        catch (DimensionalityMismatchEx error)
         {
-            if(pointA.getValue(i) > pointB.getValue(i))
-                return true;
-            if(pointA.getValue(i) < pointB.getValue(i))
-                return false;
+            cout << error;
         }
         return true;//If it finished they are equal.
     }

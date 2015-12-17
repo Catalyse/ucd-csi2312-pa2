@@ -5,21 +5,43 @@ using namespace std;
 namespace Clustering
 {
     //---------------------------------------------DimsensionalityMismatchEx-----------------------------------------/
-    DimensionalityMismatchEx::DimensionalityMismatchEx(string name) {
-        this->resetError();
-        this->name = name;
-        this->errMessage = "Dimensionality Mismatch Error";
+    DimensionalityMismatchEx::DimensionalityMismatchEx() {}
+
+    DimensionalityMismatchEx::DimensionalityMismatchEx(string error)
+    {
+        this->message = error;
     }
 
-    ostream &operator<<(ostream & os, DimensionalityMismatchEx & dimErr) {
-        os.width(4);
-        os << dimErr.getLine() << ": ";
-        os.width(65);
-        os.setf(ios::left, ios::adjustfield);
-        os << dimErr.getName() << "  ";
-        os.setf(ios::right, ios::adjustfield);
-        os << dimErr.getErr() << "\n";
-        os.flush();
+    ostream &operator<<(ostream & stream, DimensionalityMismatchEx & error)
+    {
+        stream << error.getName() << " :: " << error.getError() << "\n";
     }
-}
+
+    //--------------------------------------------OutOfBoundsEx-----------------------------------------------------/
+    OutOfBoundsEx::OutOfBoundsEx() {}
+    OutOfBoundsEx::OutOfBoundsEx(string error)
+    {
+        this->message = error;
+    }
+
+    ostream &operator<<(ostream & stream, OutOfBoundsEx & error)
+    {
+        stream << error.getName() << " :: " << error.getError() << "\n";
+    }
+
+    //------------------------------------------RemoveFromEmptyEx---------------------------------------------------/
+    RemoveFromEmptyEx::RemoveFromEmptyEx()
+    {
+        this->message = "Object is empty, cannot remove from it.";
+    }
+
+    RemoveFromEmptyEx::RemoveFromEmptyEx(string error)
+    {
+        this->message = error;
+    }
+
+    ostream &operator<<(ostream & stream, RemoveFromEmptyEx & error)
+    {
+        stream << error.getName() << " :: " << error.getError() << "\n";
+    }
 }

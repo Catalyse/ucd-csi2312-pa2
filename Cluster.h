@@ -23,10 +23,6 @@ namespace Clustering {
         unsigned int __id;
         static unsigned int __idGenerator;
 
-        void __del();
-        void __cpy(LNodePtr pts);
-        bool __in(const PointPtr ptr) const;
-
         class Centroid {
             unsigned int __dimensions;
             Point __p;

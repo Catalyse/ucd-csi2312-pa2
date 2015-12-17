@@ -62,13 +62,22 @@ namespace Clustering
     //Centroid methods
     void Cluster::computeCentroid()
     {
-        PointPtr centroid = new Point(this->__dimensionality);
-        for (LNodePtr current = this->__points; current != nullptr; current = current->next)
-        {
-            *centroid += *current->p;
+        try {
+            if(__points == nullptr)
+            {
+                throw RemoveFromEmptyEx("Cannot Computer Centroid: Cluster is Empty!");
+            }
+            PointPtr centroid = new Point(this->__dimensionality);
+            for (LNodePtr current = this->__points; current != nullptr; current = current->next) {
+                *centroid += *current->p;
+            }
+            *centroid /= this->getSize();
+            this->setCentroid(*centroid);
         }
-        *centroid /= this->getSize();
-        this->setCentroid(*centroid);
+        catch (RemoveFromEmptyEx error)
+        {
+            cout << error;
+        }
     }
 
     //kmeans methods
@@ -222,34 +231,38 @@ namespace Clustering
 
     const PointPtr &Cluster::remove(const PointPtr & removePoint)
     {
-        if(__points != nullptr)
-        {
-            LNodePtr current;
-            LNodePtr last = nullptr;
-            for (current = this->__points; current != nullptr; current = current->next)
-            {
-                if (current->p == removePoint)
-                {
-                    if (last == nullptr)
-                    {
-                        this->__points = this->__points->next;
-                        --(this->__size);
-                        break;
+        try {
+            if (__points != nullptr) {
+                LNodePtr current;
+                LNodePtr last = nullptr;
+                for (current = this->__points; current != nullptr; current = current->next) {
+                    if (current->p == removePoint) {
+                        if (last == nullptr) {
+                            this->__points = this->__points->next;
+                            --(this->__size);
+                            break;
+                        }
+                        else {
+                            last->next = current->next;
+                            --(this->__size);
+                            break;
+                        }
                     }
-                    else
-                    {
-                        last->next = current->next;
-                        --(this->__size);
-                        break;
+                    else {
+                        last = current;
                     }
                 }
-                else
-                {
-                    last = current;
-                }
+                this->invalidateCentroid();
+                return removePoint;
             }
-            this->invalidateCentroid();
-            return removePoint;
+            else
+            {
+                throw RemoveFromEmptyEx("Cannot remove point from empty cluster.");
+            }
+        }
+        catch (RemoveFromEmptyEx error)
+        {
+            cout << error;
         }
         return removePoint;
     }
@@ -315,12 +328,21 @@ namespace Clustering
     // - Members
     const PointPtr & Cluster::operator[](unsigned int index) const
     {
-        LNodePtr current = this->__points;
-        for (int i = 0; i < index; i++)
-        {
-            current = current->next;
+        try {
+            if(index < 1)
+            {
+                throw OutOfBoundsEx("Index out of Bounds!");
+            }
+            LNodePtr current = this->__points;
+            for (int i = 0; i < index; i++) {
+                current = current->next;
+            }
+            return current->p;
         }
-        return current->p;
+        catch (OutOfBoundsEx error)
+        {
+            cout << error;
+        }
     }
 
     Cluster & Cluster::operator+=(const Cluster &rhs){

@@ -4,8 +4,6 @@
 #include <string>
 #include <iostream>
 
-#include "Cluster.h"
-
 using namespace std;
 
 namespace Clustering
@@ -17,11 +15,12 @@ namespace Clustering
         string message;
     public:
         // Constructors
+        DimensionalityMismatchEx();//No context Errors
         DimensionalityMismatchEx(string);
 
         // Getters
         string getName() {return this->name;}
-        string getErr() {return this->message;}
+        string getError() {return this->message;}
 
         friend std::ostream &operator<<(ostream &, DimensionalityMismatchEx &);
 
@@ -34,6 +33,7 @@ namespace Clustering
         string name = "Out Of Bounds Error: ";
         string message;
     public:
+        OutOfBoundsEx();//No context error
         OutOfBoundsEx(string);
 
         string getName() {return this->name;};
@@ -48,10 +48,11 @@ namespace Clustering
         string name = "Remove From Empty Error: ";
         string message;
     public:
+        RemoveFromEmptyEx();//No context error
         RemoveFromEmptyEx(string);
 
         string getName() {return this->name;};
-        string getErr() {return this->message;};
+        string getError() {return this->message;};
 
 
         friend std::ostream &operator<<(ostream &, RemoveFromEmptyEx &);
