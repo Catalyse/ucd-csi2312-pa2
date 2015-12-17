@@ -10,11 +10,7 @@ namespace Clustering
     // The big three: cpy ctor, overloaded operator=, dtor
     Cluster::Cluster(const Cluster & copy) : __centroid(copy.getDimensionality())
     {
-        if (this == &copy)
-        {
-            // dont copy self
-        }
-        else
+        if (this != &copy)
         {
             this->__size = 0;
             this->__dimensionality = copy.__dimensionality;
@@ -22,10 +18,15 @@ namespace Clustering
             this->__release_points = copy.__release_points;
             this->__greedy = copy.__greedy;
             this->__id = copy.getId();
-            for (LNodePtr current = copy.__points; current != nullptr; current = current->next)
+            LNodePtr current;
+            for (current = copy.__points; current != nullptr; current = current->next)
             {
                 this->add(current->p);
             }
+        }
+        else
+        {
+            //dont copy self.
         }
     }
 
@@ -58,6 +59,7 @@ namespace Clustering
 
     }
 
+    //Centroid methods
     void Cluster::computeCentroid()
     {
         PointPtr centroid = new Point(this->__dimensionality);
@@ -69,6 +71,7 @@ namespace Clustering
         this->setCentroid(*centroid);
     }
 
+    //kmeans methods
     void Cluster::pickPoints(unsigned int pick, PointPtr * pointArray)
     {
         LNodePtr current = this->__points;
@@ -256,23 +259,13 @@ namespace Clustering
     // IO
     std::ostream &operator<<(std::ostream &stream, const Cluster & cluster)
     {
-        if (cluster.__size != 0)
-        {
-            LNodePtr currentNode = cluster.__points;//Current Node
-            PointPtr point = cluster.__points->p;//Current Node point
+        LNodePtr currentNode = cluster.__points;//Current Node
+        int clusterID = cluster.__id;
 
-            std::cout << *point;
-
-            while(currentNode->next != nullptr)
-            {
-                currentNode = currentNode->next;
-                point = currentNode->p;
-                std::cout << *point;
-            }
-        }
-        else
+        for(currentNode; currentNode!= nullptr; currentNode = currentNode->next)
         {
-            std::cout << "Cluster is empty" << std::endl;
+            stream << *currentNode->p;
+            stream << Cluster::POINT_CLUSTER_ID_DELIM << clusterID - 1 << std::endl;
         }
         return stream;
     }
@@ -307,12 +300,12 @@ namespace Clustering
 
         if(lhs.__size == rhs.__size)
         {
-            while(currentL != nullptr)
+            for (currentL; currentL != nullptr; currentL = currentL->next)
             {
                 if(currentL->p != currentR->p)
                     return false;
-                currentL = currentL->next;
-                currentR = currentR->next;
+                else
+                    currentR = currentR->next;
             }
             return true;
         }
@@ -330,6 +323,27 @@ namespace Clustering
         return current->p;
     }
 
+    Cluster & Cluster::operator+=(const Cluster &rhs){
+        if (this->__size == 0){
+            for (LNodePtr rhsNodeCursor = rhs.__points; rhsNodeCursor != nullptr; rhsNodeCursor = rhsNodeCursor->next) {
+                this->add(rhsNodeCursor->p);
+            }
+        } else {
+            // iterate through all the nodes within the RHS cluster
+            for (LNodePtr rhsNodeCursor = rhs.__points; rhsNodeCursor != nullptr; rhsNodeCursor = rhsNodeCursor->next){
+                bool addPoint = true;
+                for (LNodePtr thisNodeCursor = this->__points; thisNodeCursor != nullptr; thisNodeCursor = thisNodeCursor->next){
+                    if (thisNodeCursor->p == rhsNodeCursor->p){
+                        addPoint = false;
+                    }
+                }
+                if (addPoint){
+                    this->add(rhsNodeCursor->p);
+                }
+            }
+        }
+        return *this;
+    }/*
     Cluster &Cluster::operator+=(const Cluster &rhs) // union
     {
         if(rhs.__size > 0)
@@ -341,8 +355,12 @@ namespace Clustering
                 current = current->next;
             }
         }
+        else
+        {
+            *this = rhs;
+        }
         return *this;
-    }
+    }*/
 
     Cluster &Cluster::operator-=(const Cluster &rhs) // (asymmetric) difference
     {
@@ -362,12 +380,21 @@ namespace Clustering
     {
         PointPtr pointer =  new Point(point);
         this->add(pointer);
+        return *this;
     }
 
     Cluster &Cluster::operator-=(const Point &point) // remove point
     {
-        PointPtr pointer = new Point(point);
-        this->remove(pointer);
+        LNodePtr current = this->__points;
+        for (current; current != nullptr; current = current->next)
+        {
+            if (*current->p == point)
+            {
+                this->remove(current->p);
+                break;
+            }
+        }
+        return *this;
     }
 
 

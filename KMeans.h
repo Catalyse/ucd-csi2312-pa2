@@ -11,9 +11,11 @@
 
 #include "Cluster.h"
 
-namespace Clustering {
+namespace Clustering
+{
 
-    class KMeans {
+    class KMeans
+    {
         unsigned int __dimensionality;
         unsigned int __k;
         Cluster **__clusters;

@@ -105,13 +105,8 @@ namespace Clustering
     }
     Point &Point::operator/=(double divisor) 
     {
-        if(divisor == 0)
-            std::cout << "You cannot divide by Zero" << std::endl;
-        else
-        {
-            for (int i = 0 + START_INDEX; i < dim + START_INDEX; i++)
-                values[i] /= divisor;
-        }
+        for (int i = 0 + START_INDEX; i < dim + START_INDEX; i++)
+            values[i] /= divisor;
         return *this;
     }
     const Point Point::operator*(double multiple) const 
@@ -124,13 +119,8 @@ namespace Clustering
     const Point Point::operator/(double divisor) const 
     {
         Point temp(*this);
-        if(divisor == 0)
-            std::cout << "You cannot divide by Zero" << std::endl;
-        else
-        {
-            for (int i = 0 + START_INDEX; i < temp.getDims() + START_INDEX; i++)
-                temp.values[i] /= divisor;
-        }
+        for (int i = 0 + START_INDEX; i < temp.getDims() + START_INDEX; i++)
+            temp.values[i] /= divisor;
         return temp;
     }
 
